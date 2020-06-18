@@ -1,0 +1,6 @@
+  kind: "Node"
+  apiVersion: "v1"
+  metadata: 
+    name: "127.0.0.1"
+    labels: 
+      name: "db-node"
