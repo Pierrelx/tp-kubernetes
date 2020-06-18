@@ -1,24 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-mysql
+  name: mysql-service
   labels:
     app: wordpress
 spec:
-  ports:
-    - port: 3306
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      name: mysql-np
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: mysql-pvc
   labels:
     app: wordpress
 spec:
+  #storageClassName: rook-ceph-block
   accessModes:
     - ReadWriteOnce
   resources:
@@ -28,7 +31,7 @@ spec:
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: wordpress-mysql
+  name: mysql-deployment
   labels:
     app: wordpress
 spec:
@@ -62,4 +65,4 @@ spec:
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: mysql-pvc
